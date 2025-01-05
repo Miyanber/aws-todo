@@ -11,14 +11,17 @@ export class TodoService {
         // 新しいリクエスト前に既存のメッセージを削除
         Message.dispose();
 
-        const response = await fetch(url, options).catch(error => {
+        return fetch(url, options)
+        .then((res) => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! Status: ${res.status}`);
+            }
+            return res.json();
+        })
+        .catch((error) => {
             console.error("API error:", error);
-            throw error
+            throw error;
         });
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
     }
 
     /**
@@ -29,7 +32,7 @@ export class TodoService {
             data.map(item => {
                 new Todo(
                     item.id,
-                    item.title, 
+                    item.title,
                     item.detail,
                     item.deadLine,
                     item.is_done,
