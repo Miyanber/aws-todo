@@ -29,16 +29,14 @@ export class TodoService {
      */
     static async getAll() {
         return this.fetchFromApi(ApiUrls.getTodo).then((data) => {
-            return data.map((item) => {
-                new Todo(
-                    item.id,
-                    item.title,
-                    item.detail,
-                    item.deadLine,
-                    item.is_done,
-                    item.is_deleted,
-                )
-            })
+            return data.map((item) => new Todo(
+                item.id,
+                item.title,
+                item.detail,
+                item.deadLine,
+                item.is_done,
+                item.is_deleted,
+            ))
         }).catch(error => {
             console.error("Error fetching todos:", error);
             return [];
@@ -63,13 +61,13 @@ export class TodoService {
 
         return this.fetchFromApi(ApiUrls.manageTodo, {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         })
-        .then(() => true)
-        .catch(error => {
-            console.error("Error updating todo:", error);
-            return false;
-        })
+            .then(() => true)
+            .catch(error => {
+                console.error("Error updating todo:", error);
+                return false;
+            })
     }
 }
