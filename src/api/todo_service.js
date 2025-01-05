@@ -28,8 +28,8 @@ export class TodoService {
      * GetTodo を呼び出す関数。
      */
     static async getAll() {
-        return TodoService.fetchFromApi(ApiUrls.getTodo).then((data) => {
-            data.map((item) => {
+        return this.fetchFromApi(ApiUrls.getTodo).then((data) => {
+            return data.map((item) => {
                 new Todo(
                     item.id,
                     item.title,
@@ -65,7 +65,8 @@ export class TodoService {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(data),
-        }).then(() => true)
+        })
+        .then(() => true)
         .catch(error => {
             console.error("Error updating todo:", error);
             return false;
