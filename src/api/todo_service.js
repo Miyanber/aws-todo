@@ -12,24 +12,24 @@ export class TodoService {
         Message.dispose();
 
         return fetch(url, options)
-        .then((res) => {
-            if (!res.ok) {
-                throw new Error(`HTTP error! Status: ${res.status}`);
-            }
-            return res.json();
-        })
-        .catch((error) => {
-            console.error("API error:", error);
-            throw error;
-        });
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(`HTTP error! Status: ${res.status}`);
+                }
+                return res.json();
+            })
+            .catch((error) => {
+                console.error("API error:", error);
+                throw error;
+            });
     }
 
     /**
      * GetTodo を呼び出す関数。
      */
     static async getAll() {
-        return TodoService.fetchFromApi(ApiUrls.getTodo).then(data => {
-            data.map(item => {
+        return TodoService.fetchFromApi(ApiUrls.getTodo).then((data) => {
+            data.map((item) => {
                 new Todo(
                     item.id,
                     item.title,
@@ -43,7 +43,7 @@ export class TodoService {
             console.error("Error fetching todos:", error);
             return [];
         });
-        
+
     }
 
     /**
