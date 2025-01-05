@@ -5,16 +5,43 @@ import { ApiUrls } from "./config.js";
 export class TodoService {
     /**
      * API 通信を行う関数の作成。
+     * fetch apiのwrapperみたいなもん
      */
     static async fetchFromApi(url, options = {}) {
         // 新しいリクエスト前に既存のメッセージを削除
         Message.dispose();
+
+        const response = await fetch(url, options).catch(error => {
+            console.error("API error:", error);
+            throw error
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
     }
 
     /**
      * GetTodo を呼び出す関数。
      */
-    static async getAll() {}
+    static async getAll() {
+        return TodoService.fetchFromApi(ApiUrls.getTodo).then(data => {
+            data.map(item => {
+                new Todo(
+                    item.id,
+                    item.title, 
+                    item.detail,
+                    item.deadLine,
+                    item.is_done,
+                    item.is_deleted,
+                )
+            })
+        }).catch(error => {
+            console.error("Error fetching todos:", error);
+            return [];
+        });
+        
+    }
 
     /**
      * ManageTodo を呼び出す関数。
@@ -30,5 +57,21 @@ export class TodoService {
             is_done: formData.is_done,
             is_deleted: formData.is_deleted,
         };
+
+        // return TodoService.fetchFromApi(ApiUrls.getTodo).then(data => {
+        //     data.map(item => {
+        //         new Todo(
+        //             item.id,
+        //             item.title, 
+        //             item.detail,
+        //             item.deadLine,
+        //             item.is_done,
+        //             item.is_deleted,
+        //         )
+        //     })
+        // }).catch(error => {
+        //     console.error("Error fetching todos:", error);
+        //     return [];
+        // });
     }
 }
